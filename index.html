@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="A guessing game about EToH.">
+        <meta name="keywords" content="eternle, etoh, jtoh, eternal towers of hell, jukes towers of hell, roblox">
+        <title>Eternle</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <!-- title -->
+        <h1>Eternle</h1>
+        <p class="title">A guessing game about EToH.</p>
+        <hr>
+
+        <!-- info -->
+        <table>
+            <tr>
+                <td><b>Tower Type</b></td>
+                <td id="towertype">???</td>
+            </tr>
+            <tr>
+                <td><b>Location</b></td>
+                <td id="location">???</td>
+            </tr>
+            <tr>
+                <td><b>Difficulty</b></td>
+                <td id="difficulty">???</td>
+            </tr>
+            <tr>
+                <td><b>Creator(s)</b></td>
+                <td id="creators">???</td>
+            </tr>
+        </table>
+
+        <!-- game -->
+        <div class="game">
+            <!-- guess -->
+            <input id="guess" placeholder="To??">
+            <div class="btns">
+                <button onclick="submitGuess()">Guess</button>
+                <button onclick="window.location.reload()">New</button>
+            </div>
+
+            <!-- stati -->
+            <div class="status" id="remaining"></div>
+            <div class="status" id="status"></div>
+        </div>
+
+        <!-- footer -->
+        <br><br><hr>
+        <p class="footer">By <a href="https://github.com/las-r">las_r</a> | v0.1</p>
+
+        <!-- script -->
+        <script src="script.js"></script>
+    </body>
+</html>
