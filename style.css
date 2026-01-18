@@ -1,10 +1,11 @@
-/* eternle stylesheet v0.2 */
+/* eternle stylesheet v0.3 */
 /* by las-r on github */
 
-/* ---------- Base ---------- */
 body {
     margin: 50px;
     background-color: #000;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://static.wikia.nocookie.net/ktoh/images/d/db/R3revampwithR2replica.png");
+    background-size: cover;
     color: #fff;
     font-family: monospace;
     line-height: 1.5;
@@ -14,9 +15,8 @@ body {
     box-sizing: border-box;
 }
 
-/* ---------- Headings ---------- */
 h1, h2 {
-    font-weight: 100;
+    font-weight: 500;
     margin: 1rem 0;
 }
 
@@ -30,7 +30,6 @@ h2 {
     text-align: left;
 }
 
-/* ---------- Paragraphs ---------- */
 p.title {
     text-align: center;
     font-size: 1.25rem;
@@ -48,7 +47,6 @@ p.attr {
     color: #999;
 }
 
-/* ---------- Inputs ---------- */
 input {
     padding: 0.4rem 0.6rem;
     margin-bottom: 1rem;
@@ -64,7 +62,6 @@ input:focus {
     border-color: #888;
 }
 
-/* ---------- Buttons ---------- */
 .btns {
     display: flex;
     gap: 10px;
@@ -87,11 +84,10 @@ button:hover {
     border-color: #888;
 }
 
-/* ---------- Table ---------- */
 table {
     width: 90%;
     max-width: 400px;
-    margin: 2rem auto;
+    margin: auto;
     border-collapse: collapse;
 }
 
@@ -108,7 +104,6 @@ tr:last-child {
     border-bottom: none;
 }
 
-/* ---------- Game Container ---------- */
 .game {
     display: flex;
     flex-direction: column;
@@ -116,7 +111,10 @@ tr:last-child {
     text-align: center;
 }
 
-/* ---------- Small Utilities ---------- */
+hr {
+    margin: 2rem;
+}
+
 .center {
     text-align: center;
 }
