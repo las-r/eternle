@@ -1,10 +1,10 @@
-/* eternle stylesheet v0.3.1 */
+/* eternle stylesheet v0.3.2 */
 /* by las-r on github */
 
 body {
     margin: 50px;
     background-color: #000;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://static.wikia.nocookie.net/ktoh/images/d/db/R3revampwithR2replica.png");
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://static.wikia.nocookie.net/ktoh/images/d/db/R3revampwithR2replica.png/revision/latest");");
     background-size: cover;
     color: #fff;
     font-family: monospace;
