@@ -11,7 +11,7 @@ body {
     background-color: #000;
     background-image:
         linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-        url("https://static.wikia.nocookie.net/ktoh/images/d/db/R3revampwithR2replica.png/revision/latest/scale-to-width-down/0?format=original");
+        url("background.png");
     background-size: cover;
     background-position: center;
     color: #fff;
@@ -134,5 +134,6 @@ hr {
 .hidden {
     display: none;
 }
+
 
 
