@@ -1,4 +1,4 @@
-// eternle script v0.1
+// eternle script v0.2
 // by las-r on github
 
 // helper functions
@@ -18,7 +18,14 @@ function setRemaining(msg) {
 }
 function endGame() {
     gameOver = true;
-    document.getElementById("remaining").textContent = "";
+    if (typ.textContent == "???") typ.innerHTML = `<i>${tower.type}</i>`; 
+    else typ.textContent = tower.type;
+    if (dif.textContent == "???") dif.innerHTML = `<i>${tower.difficulty}</i>`; 
+    else dif.textContent = tower.difficulty;
+    if (loc.textContent == "???") loc.innerHTML = `<i>${tower.location}</i>`; 
+    else loc.textContent = tower.location;
+    if (cre.textContent == "???") cre.innerHTML = `<i>${tower.creators}</i>`; 
+    else cre.textContent = tower.creators;
 }
 async function fetchPageHTML(page) {
     const url =
@@ -110,15 +117,11 @@ async function getTowerData(name) {
     }
     const diffRaw = getField("Difficulty");
     if (diffRaw) {
-        data.difficulty = diffRaw.split("(")[0].trim();
+        data.difficulty = diffRaw.trim().split(" ").slice(0, 3).join(" ");
     }
     const creatorRaw = getField("Creator(s)");
     if (creatorRaw) {
-        data.creators = creatorRaw
-            .split(/[,;]+/)
-            .map(s => s.trim())
-            .filter(Boolean)
-            .join(", ");
+        data.creators = creatorRaw.trim();
     }
 
     return data;
@@ -131,11 +134,12 @@ const dif = document.getElementById("difficulty");
 const cre = document.getElementById("creators");
 const inp = document.getElementById("guess");
 const revealOrder = ["type", "location", "difficulty", "creators"];
+const guesses = 5
 let towers = [];
 let towerAcronyms = [];
 
 // variables
-let guessesLeft = 5;
+let guessesLeft = guesses;
 let gameOver = false;
 let tower;
 let revealIndex = 0;
@@ -182,11 +186,7 @@ function submitGuess() {
     }
 
     if (guess === tower.name.toLowerCase() || guess == getAcronym(tower.name.toLowerCase())) {
-        typ.textContent = tower.type;
-        dif.textContent = tower.difficulty;
-        loc.textContent = tower.location;
-        cre.textContent = tower.creators;
-        setStatus("Correct!");
+        setStatus(`Correct! (${guesses - guessesLeft} guesses)`);
         endGame();
         return;
     }
