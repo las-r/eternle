@@ -1,4 +1,4 @@
-/* eternle stylesheet v0.3.6 */
+/* eternle stylesheet v0.3.7 */
 /* by las-r on github */
 
 html {
@@ -11,7 +11,7 @@ body {
     background-color: #000;
     background-image:
         linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-        url("https://static.wikia.nocookie.net/ktoh/images/d/db/R3revampwithR2replica.png/revision/latest/scale-to-width-down/0");
+        url("https://static.wikia.nocookie.net/ktoh/images/d/db/R3revampwithR2replica.png/revision/latest/scale-to-width-down/0?cb=20240101");
     background-size: cover;
     background-position: center;
     color: #fff;
