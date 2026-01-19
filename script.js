@@ -1,4 +1,4 @@
-// eternle script v0.2.1
+// eternle script v0.2.2
 // by las-r on github
 
 // helper functions
@@ -184,7 +184,7 @@ function submitGuess() {
     }
 
     if (guess === tower.name.toLowerCase() || guess == getAcronym(tower.name.toLowerCase())) {
-        setStatus(`Correct! (${guesses - guessesLeft} guesses)`);
+        setStatus(`Correct! (${guesses - guessesLeft + 1} guesses)`);
         endGame();
         return;
     }
@@ -209,3 +209,4 @@ document.onkeypress = function(e) {
         submitGuess();
     }
 }
+
