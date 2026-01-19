@@ -1,4 +1,4 @@
-// eternle script v0.2.2
+// eternle script v0.2.3
 // by las-r on github
 
 // helper functions
@@ -84,12 +84,12 @@ async function getTowerData(name) {
     const doc = new DOMParser().parseFromString(html, "text/html");
     const data = {
         name,
-        type: name.includes("Steeple") ? "Steeple"
-            : name.includes("Citadel") ? "Citadel"
-            : name.includes("Obelisk") ? "Obelisk"
-            : name.includes("Tower Rush") ? "Tower Rush"
-            : name.startsWith("Tower of") ? "Tower"
-            : "Mini Tower",
+        type: name.includes("Steeple of ") ? "Steeple"
+            : name.includes("Citadel of ") ? "Citadel"
+            : name.includes("Obelisk of ") ? "Obelisk"
+            : name.includes(" Tower Rush") ? "Tower Rush"
+            : name.startsWith("Tower of ") ? "Tower"
+            : name.includes("Tower") ? "Mini Tower",
         difficulty: "Unknown",
         location: "Unknown",
         creators: "Unknown"
@@ -209,4 +209,5 @@ document.onkeypress = function(e) {
         submitGuess();
     }
 }
+
 
