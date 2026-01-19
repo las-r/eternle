@@ -1,4 +1,4 @@
-// eternle script v0.3
+// eternle script v0.3.1
 // by las-r on github
 
 // helper functions
@@ -223,7 +223,7 @@ function submitGuess() {
     setStatus("Wrong guess.");
 }
 
-// ---------- input ----------
+// input
 document.addEventListener("keypress", e => {
     if (e.key === "Enter") submitGuess();
 });
