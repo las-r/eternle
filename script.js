@@ -1,14 +1,13 @@
-// eternle script v0.2.3
+// eternle script v0.3
 // by las-r on github
 
 // helper functions
 function getAcronym(n) {
-    let words = n.split(" ");
-    let out = "";
-    for (let i = 0; i < words.length; i++) {
-        out += words[i][0];
-    }
-    return out;
+    return n
+        .split(/[\s-]+/)
+        .filter(Boolean)
+        .map(w => w[0])
+        .join("");
 }
 function setStatus(msg) {
     document.getElementById("status").textContent = msg;
@@ -18,15 +17,13 @@ function setRemaining(msg) {
 }
 function endGame() {
     gameOver = true;
-    if (typ.textContent == "???") typ.innerHTML = `<i>${tower.type}</i>`; 
-    else typ.textContent = tower.type;
-    if (dif.textContent == "???") dif.innerHTML = `<i>${tower.difficulty}</i>`; 
-    else dif.textContent = tower.difficulty;
-    if (loc.textContent == "???") loc.innerHTML = `<i>${tower.location}</i>`; 
-    else loc.textContent = tower.location;
-    if (cre.textContent == "???") cre.innerHTML = `<i>${tower.creators}</i>`; 
-    else cre.textContent = tower.creators;
+    typ.innerHTML = typ.textContent === "???" ? `<i>${tower.type}</i>` : tower.type;
+    dif.innerHTML = dif.textContent === "???" ? `<i>${tower.difficulty}</i>` : tower.difficulty;
+    loc.innerHTML = loc.textContent === "???" ? `<i>${tower.location}</i>` : tower.location;
+    cre.innerHTML = cre.textContent === "???" ? `<i>${tower.creators}</i>` : tower.creators;
 }
+
+// info fetch functions
 async function fetchPageHTML(page) {
     const url =
         "https://jtoh.fandom.com/api.php?" +
@@ -37,88 +34,97 @@ async function fetchPageHTML(page) {
             format: "json",
             origin: "*"
         });
-
     const json = await (await fetch(url)).json();
-    return json.parse.text["*"];
+    return json.parse?.text?.["*"] ?? "";
 }
-
-// tower functions
 async function getTowerNames(noncanon = false) {
     const html = await fetchPageHTML("Tower");
     const doc = new DOMParser().parseFromString(html, "text/html");
-    const isItalic = el =>
-        !el
-            ? false
-            : ((el.getAttribute("style") || "").includes("italic") ||
-               isItalic(el.parentElement));
-    const container = [...doc.querySelectorAll("div[style]")].find(d =>
-        d.style.cssText.includes("border: 3px solid") &&
-        d.style.cssText.includes("theme-accent-color")
-    );
-    if (!container) return [];
     const out = new Set();
-    for (const c of container.children) {
-        if (!noncanon && c.textContent.trim() === "Other") break;
-        c.querySelectorAll("a").forEach(a => {
-            const n = a.textContent.trim();
-            const l = n.toLowerCase();
-            if (
-                n &&
-                !isItalic(a) &&
-                n.length >= 13 &&
-                !n.includes("(") &&
-                (
-                    l.includes("tower") ||
-                    l.includes("steeple") ||
-                    l.includes("citadel")
-                )
-            ) {
-                out.add(n);
-            }
-        });
+    const links = doc.querySelectorAll("a");
+    for (const a of links) {
+        const name = a.textContent.trim();
+        const lower = name.toLowerCase();
+        if (
+            name.length >= 13 &&
+            !name.includes("(") &&
+            (   
+                lower.includes("tower") ||
+                lower.startsWith("tower of ") ||
+                lower.startsWith("steeple of ") ||
+                lower.startsWith("citadel of ") ||
+                lower.startsWith("obelisk of ")
+            )
+        ) {out.add(name);}
     }
     return [...out];
+}
+function getInfoboxField(doc, label) {
+    const items = doc.querySelectorAll(".pi-item.pi-data");
+
+    for (const item of items) {
+        const lab = item.querySelector(".pi-data-label");
+        const val = item.querySelector(".pi-data-value");
+
+        if (!lab || !val) continue;
+
+        if (lab.textContent.trim().toLowerCase() === label.toLowerCase()) {
+            return val;
+        }
+    }
+    return null;
+}
+
+// data functions
+function cleanCreators(container) {
+    const liNames = [...container.querySelectorAll("li")]
+        .map(li => li.textContent.trim())
+        .filter(Boolean);
+    if (liNames.length > 0) return liNames.join(", ");
+    const linkNames = [...container.querySelectorAll("a")]
+        .map(a => a.textContent.trim())
+        .filter(Boolean);
+    if (linkNames.length > 0) return linkNames.join(", ");
+    const spanNames = [...container.querySelectorAll("span#VerifiedBuilder")]
+        .map(s => s.textContent.trim())
+        .filter(Boolean);
+    if (spanNames.length > 0) return spanNames.join(", ");
+    return container.textContent
+        .replace(/\[[^\]]*\]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
 }
 async function getTowerData(name) {
     const html = await fetchPageHTML(name);
     const doc = new DOMParser().parseFromString(html, "text/html");
+
     const data = {
         name,
-        type: name.includes("Steeple of ") ? "Steeple"
-            : name.includes("Citadel of ") ? "Citadel"
-            : name.includes("Obelisk of ") ? "Obelisk"
-            : name.includes(" Tower Rush") ? "Tower Rush"
-            : name.startsWith("Tower of ") ? "Tower"
-            : name.includes("Tower") ? "Mini Tower",
+        type:
+            name.includes("Steeple of ") ? "Steeple" :
+            name.includes("Citadel of ") ? "Citadel" :
+            name.includes("Obelisk of ") ? "Obelisk" :
+            name.includes(" Tower Rush") ? "Tower Rush" :
+            name.startsWith("Tower of ") ? "Tower" :
+            "Mini Tower",
         difficulty: "Unknown",
         location: "Unknown",
         creators: "Unknown"
     };
 
-    // helper: find value after a label
-    function getField(label) {
-        const labelEl = [...doc.querySelectorAll("h3, h4, b")]
-            .find(e => e.textContent.trim().toLowerCase() === label.toLowerCase());
-        if (!labelEl) return null;
-        let el = labelEl.nextElementSibling;
-        while (el && !el.textContent.trim()) {
-            el = el.nextElementSibling;
-        }
-        return el?.textContent;
+    const locEl = getInfoboxField(doc, "Located In");
+    if (locEl) {
+        data.location = locEl.textContent.replace(/\s+/g, " ").trim();
     }
 
-    // get data
-    const locRaw = getField("Located In");
-    if (locRaw) {
-        data.location = locRaw.replace(/\s+/g, " ").trim();
+    const diffEl = getInfoboxField(doc, "Difficulty");
+    if (diffEl) {
+        data.difficulty = diffEl.textContent.trim();
     }
-    const diffRaw = getField("Difficulty");
-    if (diffRaw) {
-        data.difficulty = diffRaw.trim().split(" ").slice(0, 3).join(" ");
-    }
-    const creatorRaw = getField("Creator(s)");
-    if (creatorRaw) {
-        data.creators = creatorRaw.trim();
+
+    const creatorEl = getInfoboxField(doc, "Creator(s)");
+    if (creatorEl) {
+        data.creators = cleanCreators(creatorEl);
     }
 
     return data;
@@ -130,12 +136,13 @@ const loc = document.getElementById("location");
 const dif = document.getElementById("difficulty");
 const cre = document.getElementById("creators");
 const inp = document.getElementById("guess");
+
 const revealOrder = ["type", "location", "difficulty", "creators"];
-const guesses = 5
+const guesses = 5;
+
+// game state
 let towers = [];
 let towerAcronyms = [];
-
-// variables
 let guessesLeft = guesses;
 let gameOver = false;
 let tower;
@@ -144,23 +151,34 @@ let revealIndex = 0;
 // init
 async function init() {
     setStatus("Loading towers…");
+
     towers = await getTowerNames();
+    if (!towers.length) {
+        setStatus("Failed to load towers.");
+        return;
+    }
+
     const chosen = towers[Math.floor(Math.random() * towers.length)];
     tower = await getTowerData(chosen);
-    for (let i = 0; i < towers.length; i++) {
-        towerAcronyms.push(getAcronym(towers[i]))
-    }
+
+    towerAcronyms = towers.map(t => getAcronym(t).toLowerCase());
+
     typ.textContent = "???";
     dif.textContent = "???";
     loc.textContent = "???";
     cre.textContent = "???";
+
+    guessesLeft = guesses;
+    revealIndex = 0;
+    gameOver = false;
+
     setRemaining(`Guesses left: ${guessesLeft}`);
     setStatus("");
     inp.focus();
 }
 init();
 
-// guess handling
+// game
 function revealNext() {
     const key = revealOrder[revealIndex++];
     if (!key) return;
@@ -176,14 +194,17 @@ function submitGuess() {
     const guess = inp.value.trim().toLowerCase();
     inp.value = "";
 
-    let towersLower = towers.map(t => t.toLowerCase());
-    let towerAcronymsLower = towerAcronyms.map(a => a.toLowerCase());
-    if (!towersLower.includes(guess) && !towerAcronymsLower.includes(guess)) {
+    const towersLower = towers.map(t => t.toLowerCase());
+
+    if (!towersLower.includes(guess) && !towerAcronyms.includes(guess) && !document.getElementById("status").textContent == msg) {
         setStatus("Enter a valid tower.");
         return;
     }
 
-    if (guess === tower.name.toLowerCase() || guess == getAcronym(tower.name.toLowerCase())) {
+    if (
+        guess === tower.name.toLowerCase() ||
+        guess === getAcronym(tower.name).toLowerCase()
+    ) {
         setStatus(`Correct! (${guesses - guessesLeft + 1} guesses)`);
         endGame();
         return;
@@ -198,16 +219,11 @@ function submitGuess() {
         return;
     }
 
-    setStatus("Wrong guess.");
     setRemaining(`Guesses left: ${guessesLeft}`);
+    setStatus("Wrong guess.");
 }
 
-// keypress event
-document.onkeypress = function(e) {
-    e = e || window.event;
-    if (e.key == "Enter") {
-        submitGuess();
-    }
-}
-
-
+// ---------- input ----------
+document.addEventListener("keypress", e => {
+    if (e.key === "Enter") submitGuess();
+});
