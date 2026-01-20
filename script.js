@@ -1,4 +1,4 @@
-// eternle script v0.4
+// eternle script v0.5
 // by las-r on github
 
 // helper functions
@@ -28,7 +28,8 @@ function saveSettings() {
         pom: document.getElementById("pom").checked,
         eventx: document.getElementById("event").checked,
         unreleased: document.getElementById("unreleased").checked,
-        removed: document.getElementById("removed").checked
+        removed: document.getElementById("removed").checked,
+        canon: document.getElementById("canon").checked
     };
     localStorage.setItem("eternle_settings", JSON.stringify(settings));
 }
@@ -41,6 +42,7 @@ function loadSettings() {
     document.getElementById("event").checked = settings.eventx;
     document.getElementById("unreleased").checked = settings.unreleased;
     document.getElementById("removed").checked = settings.removed;
+    document.getElementById("canon").checked = settings.canon;
 }
 
 // info fetch functions
@@ -143,16 +145,17 @@ function cleanCreators(container) {
         .trim();
 }
 async function getTowerData(name) {
-    const html = await fetchPageHTML(name);
+    const html = await fetchPageHTML(name.replace(" ", "_"));
     const doc = new DOMParser().parseFromString(html, "text/html");
     const pageText = (doc.body.textContent || "").toLowerCase();;
-    const isDeconfirmed = pageText.includes("contains deconfirmed content");
+    const isDeconfirmed = pageText.includes("contains deconfirmed content") || pageText.includes("contains removed content") || pageText.includes("contains scrapped content");
     const isMonthly = pageText.includes("part of a monthly challenge");
     const isUnreleased = pageText.includes("contains unreleased content");
     const isEvent = pageText.includes("part of an event");
     const isNotAllowed = (
         pageText.includes("Summit of Memories") && pageText.includes("(Classic)") && pageText.includes("Previously Located In")
     )
+    const isCanon = !(isDeconfirmed || isEvent || isMonthly || isNotAllowed || isUnreleased)
     const data = {
         name,
         isDeconfirmed,
@@ -160,6 +163,7 @@ async function getTowerData(name) {
         isUnreleased,
         isEvent,
         isNotAllowed,
+        isCanon,
         type:
             name.includes("Steeple of ") ? "Steeple" :
             name.includes("Citadel of ") ? "Citadel" :
@@ -190,6 +194,7 @@ const dif = document.getElementById("difficulty");
 const cre = document.getElementById("creators");
 const inp = document.getElementById("guess");
 
+const canon = document.getElementById("canon").checked;
 const monthly = document.getElementById("monthly").checked;
 const pom = document.getElementById("pom").checked;
 const eventx = document.getElementById("event").checked;
@@ -209,19 +214,59 @@ let revealIndex = 0;
 
 // init
 async function chooseTower() {
-    tower = await getTowerData(towers[Math.floor(Math.random() * towers.length)]);
-    let location = tower.location ? tower.location.toLowerCase() : "";
+    setStatus("Searching for a tower...");
+    
+    const settings = {
+        canon: document.getElementById("canon").checked,
+        monthly: document.getElementById("monthly").checked,
+        pom: document.getElementById("pom").checked,
+        eventx: document.getElementById("event").checked,
+        unreleased: document.getElementById("unreleased").checked,
+        removed: document.getElementById("removed").checked
+    };
 
-    if (!tower.isNotAllowed) {
-        if ((location.includes("time-lost") || tower.isMonthly) && !monthly) return await chooseTower();
-        if (location == "pit of misery" && !pom) return await chooseTower();
-        if (tower.isEvent && !eventx) return await chooseTower();
-        if (tower.isUnreleased && !unreleased) return await chooseTower();
-        if (tower.isDeconfirmed && !removed) return await chooseTower();
+    if (!Object.values(settings).some(val => val === true)) {
+        setStatus("Select a category!");
+        return;
     }
-    else return await chooseTower();
 
-    return tower;
+    let attempts = 0;
+    const maxAttempts = 100;
+
+    while (attempts < maxAttempts) {
+        attempts++;
+        
+        const batchNames = Array.from({ length: 12 }, () => 
+            towers[Math.floor(Math.random() * towers.length)]
+        );
+
+        const batchData = await Promise.all(batchNames.map(name => getTowerData(name)));
+
+        const validTower = batchData.find(t => {
+            if (t.isNotAllowed) return false;
+
+            const loc = t.location ? t.location.toLowerCase() : "";
+            const isPoM = loc.includes("pit of misery");
+            const isMonthly = loc.includes("time-lost") || t.isMonthly;
+
+            if (settings.pom && isPoM) return true;
+            if (settings.monthly && isMonthly) return true;
+            if (settings.canon && t.isCanon) return true;
+            if (settings.eventx && t.isEvent) return true;
+            if (settings.unreleased && t.isUnreleased) return true;
+            if (settings.removed && t.isDeconfirmed) return true;
+
+            return false;
+        });
+
+        if (validTower) {
+            tower = validTower;
+            setStatus("Tower chosen!");
+            return tower;
+        }
+    }
+
+    setStatus("No tower found. Change filters.");
 }
 async function init() {
     setStatus("Loading towers…");
@@ -290,10 +335,9 @@ function submitGuess() {
 document.addEventListener("keypress", e => {
     if (e.key === "Enter") submitGuess();
 });
-const optionIds = ["monthly", "pom", "event", "unreleased", "removed"];
+const optionIds = ["monthly", "pom", "event", "unreleased", "removed", "canon"];
 optionIds.forEach(id => {
     document.getElementById(id).addEventListener("change", () => {
         saveSettings();
-        setStatus("Settings saved! Refresh to apply to new game.");
     });
 });
