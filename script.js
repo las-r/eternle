@@ -1,4 +1,4 @@
-// eternle script v0.5
+// eternle script v0.5.1
 // by las-r on github
 
 // helper functions
@@ -324,6 +324,7 @@ function submitGuess() {
     revealNext();
     if (guessesLeft <= 0) {
         setStatus(`Out of guesses! It was ${tower.name} (${getAcronym(tower.name)}).`);
+        setRemaining(`Guesses left: ${guessesLeft}`);
         endGame();
         return;
     }
