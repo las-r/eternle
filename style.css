@@ -1,4 +1,4 @@
-/* eternle stylesheet v0.4 */
+/* eternle stylesheet v0.4.1 */
 /* by las-r on github */
 
 html {
@@ -47,7 +47,6 @@ p.title {
 p.footer {
     text-align: center;
     font-size: 0.9rem;
-    margin: 1rem 0 0.5rem 0;
 }
 
 p.attr {
@@ -60,7 +59,7 @@ input {
     margin-bottom: 1rem;
     border: 1px solid #555;
     border-radius: 4px;
-    background: #111;
+    background: rgba(17, 17, 17, 0.3);
     color: #fff;
     font-family: monospace;
 }
@@ -78,7 +77,7 @@ input:focus {
 
 button {
     padding: 0.5rem 1rem;
-    background: #222;
+    background: rgba(34, 34, 34, 0.3); /* slightly transparent */
     color: #fff;
     border: 1px solid #555;
     border-radius: 5px;
@@ -88,8 +87,12 @@ button {
 }
 
 button:hover {
-    background: #333;
+    background: rgba(51, 51, 51, 0.3);
     border-color: #888;
+}
+
+input, button {
+    backdrop-filter: blur(3px);
 }
 
 table {
@@ -139,4 +142,8 @@ details {
     user-select: none;
     margin-top: 1rem;
     font-size: 12px;
+}
+
+i {
+    color: #aaa;
 }
