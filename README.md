@@ -1,4 +1,4 @@
-<img width="1866" height="920" alt="image" src="https://github.com/user-attachments/assets/fddb828b-29b0-473f-aef6-41a755338406" />
+<img width="1866" height="920" alt="image" src="https://github.com/user-attachments/assets/efedfea9-388d-4394-9cd7-85299b8f82ce" />
 
 # Eternle
 A guessing game about EToH.
