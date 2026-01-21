@@ -1,4 +1,4 @@
-// eternle script v0.5.1
+// eternle script v0.5.2
 // by las-r on github
 
 // helper functions
@@ -232,11 +232,11 @@ async function chooseTower() {
 
     let attempts = 0;
     const maxAttempts = 100;
-
+    
     while (attempts < maxAttempts) {
         attempts++;
         
-        const batchNames = Array.from({ length: 12 }, () => 
+        const batchNames = Array.from({length: 12}, () => 
             towers[Math.floor(Math.random() * towers.length)]
         );
 
@@ -249,12 +249,13 @@ async function chooseTower() {
             const isPoM = loc.includes("pit of misery");
             const isMonthly = loc.includes("time-lost") || t.isMonthly;
 
-            if (settings.pom && isPoM) return true;
-            if (settings.monthly && isMonthly) return true;
-            if (settings.canon && t.isCanon) return true;
-            if (settings.eventx && t.isEvent) return true;
-            if (settings.unreleased && t.isUnreleased) return true;
-            if (settings.removed && t.isDeconfirmed) return true;
+            if (isPoM) return settings.pom;
+            if (isMonthly) return settings.monthly;
+            if (t.isEvent) return settings.eventx;
+            if (t.isUnreleased) return settings.unreleased;
+            if (t.isDeconfirmed) return settings.removed;
+
+            if (t.isCanon) return settings.canon;
 
             return false;
         });
