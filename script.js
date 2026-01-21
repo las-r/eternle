@@ -1,13 +1,23 @@
-// eternle script v0.5.3
+// eternle script v0.5.4
 // by las-r on github
 
 // helper functions
 function getAcronym(n) {
-    return n
-        .split(/[\s-]+/)
-        .filter(Boolean)
-        .map(w => w[0])
-        .join("");
+    const parts = n.split(/\s*(?=\()/); 
+    const process = (str) => {
+        return str
+            .replace(/[()]/g, "")
+            .split(/[\s-]+/)
+            .filter(word => /[a-z0-9]/i.test(word))
+            .map(word => word[0])
+            .join("");
+    };
+    const mainAcronym = process(parts[0]);
+    if (parts[1]) {
+        const parenAcronym = process(parts[1]);
+        return `${mainAcronym}(${parenAcronym})`;
+    }
+    return mainAcronym;
 }
 function setStatus(msg) {
     document.getElementById("status").textContent = msg;
