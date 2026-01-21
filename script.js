@@ -1,4 +1,4 @@
-// eternle script v0.5.2
+// eternle script v0.5.3
 // by las-r on github
 
 // helper functions
@@ -89,7 +89,7 @@ async function fetchCategoryMembers(category) {
     return pages;
 }
 async function getTowerNames() {
-    const categories = ["Towers", "Steeples", "Citadels", "Mini_Towers", "Obelisks"];
+    const categories = ["Towers", "Steeples", "Citadels", "Mini_Towers", "Obelisks", "Tower_Rushes"];
     const out = new Set();
     for (const cat of categories) {
         setStatus(`Fetching ${cat.replaceAll("_", " ")}...`);
