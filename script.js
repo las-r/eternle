@@ -1,4 +1,4 @@
-// eternle script v0.5.4
+// eternle script v0.5.5
 // by las-r on github
 
 // helper functions
@@ -36,6 +36,7 @@ function saveSettings() {
     const settings = {
         monthly: document.getElementById("monthly").checked,
         pom: document.getElementById("pom").checked,
+        som: document.getElementById("som").checked,
         eventx: document.getElementById("event").checked,
         unreleased: document.getElementById("unreleased").checked,
         removed: document.getElementById("removed").checked,
@@ -53,6 +54,7 @@ function loadSettings() {
     document.getElementById("unreleased").checked = settings.unreleased;
     document.getElementById("removed").checked = settings.removed;
     document.getElementById("canon").checked = settings.canon;
+    document.getElementById("som").checked = settings.som;
 }
 
 // info fetch functions
@@ -203,14 +205,6 @@ const loc = document.getElementById("location");
 const dif = document.getElementById("difficulty");
 const cre = document.getElementById("creators");
 const inp = document.getElementById("guess");
-
-const canon = document.getElementById("canon").checked;
-const monthly = document.getElementById("monthly").checked;
-const pom = document.getElementById("pom").checked;
-const eventx = document.getElementById("event").checked;
-const unreleased = document.getElementById("unreleased").checked;
-const removed = document.getElementById("removed").checked;
-
 const revealOrder = ["type", "location", "difficulty", "creators"];
 const guesses = 5;
 
@@ -230,6 +224,7 @@ async function chooseTower() {
         canon: document.getElementById("canon").checked,
         monthly: document.getElementById("monthly").checked,
         pom: document.getElementById("pom").checked,
+        som: document.getElementById("som").checked,
         eventx: document.getElementById("event").checked,
         unreleased: document.getElementById("unreleased").checked,
         removed: document.getElementById("removed").checked
@@ -257,9 +252,11 @@ async function chooseTower() {
 
             const loc = t.location ? t.location.toLowerCase() : "";
             const isPoM = loc.includes("pit of misery");
+            const isSoM = loc.includes("summit of memories")
             const isMonthly = loc.includes("time-lost") || t.isMonthly;
 
             if (isPoM) return settings.pom;
+            if (isSoM) return settings.som;
             if (isMonthly) return settings.monthly;
             if (t.isEvent) return settings.eventx;
             if (t.isUnreleased) return settings.unreleased;
@@ -347,7 +344,7 @@ function submitGuess() {
 document.addEventListener("keypress", e => {
     if (e.key === "Enter") submitGuess();
 });
-const optionIds = ["monthly", "pom", "event", "unreleased", "removed", "canon"];
+const optionIds = ["monthly", "pom", "event", "unreleased", "removed", "canon", "som"];
 optionIds.forEach(id => {
     document.getElementById(id).addEventListener("change", () => {
         saveSettings();
