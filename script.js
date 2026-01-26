@@ -1,4 +1,4 @@
-// eternle script v0.5.5
+// eternle script v0.5.6
 // by las-r on github
 
 // helper functions
@@ -20,6 +20,7 @@ function getAcronym(n) {
     return mainAcronym;
 }
 function setStatus(msg) {
+    console.log(msg)
     document.getElementById("status").textContent = msg;
 }
 function setRemaining(msg) {
@@ -116,9 +117,7 @@ async function getTowerNames() {
         }
     }
     const finalArray = [...out];
-    console.log(`Loaded ${finalArray.length} towers from categories.`);
-    console.log()
-    setStatus("Done fetching!");
+    setStatus(`Fetched ${finalArray.length} towers.`);
     return finalArray;
 }
 
@@ -269,15 +268,14 @@ async function chooseTower() {
 
         if (validTower) {
             tower = validTower;
-            setStatus("Tower chosen!");
             return tower;
-        }
+        };
     }
 
     setStatus("No tower found. Change filters.");
 }
 async function init() {
-    setStatus("Loading towers…");
+    setStatus("Loading towers...");
     towers = await getTowerNames();
     if (!towers.length) {
         setStatus("Failed to load towers.");
@@ -285,7 +283,7 @@ async function init() {
     }
     setStatus("Choosing tower...");
     await chooseTower();
-    setStatus("Tower chosen!");
+    setStatus("Tower chosen.");
     towerAcronyms = towers.map(t => getAcronym(t).toLowerCase());
     typ.textContent = "???";
     dif.textContent = "???";
