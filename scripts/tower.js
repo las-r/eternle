@@ -1,4 +1,4 @@
-// tower.js v1.0
+// tower.js v1.0.1
 // made by las-r on github
 
 async function chooseTower() {
