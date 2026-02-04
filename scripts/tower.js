@@ -1,8 +1,6 @@
 // tower.js v1.0
 // made by las-r on github
 
-// tower.js - Updated Tower selection logic
-
 async function chooseTower() {
     setStatus("Searching for a tower...");
     
