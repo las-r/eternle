@@ -1,4 +1,4 @@
-/* eternle stylesheet v1.0.2 */
+/* eternle stylesheet v1.0.3 */
 /* by las-r on github */
 
 html {
@@ -12,7 +12,7 @@ body {
     background-color: #000;
     background-image:
         linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-        url("background.png");
+        url("background.webp");
     background-size: cover;
     background-position: center;
     color: #fff;
