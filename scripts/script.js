@@ -1,4 +1,4 @@
-// script.js v1.0
+// script.js v1.0.1
 // made by las-r on github
 
 // constants
@@ -99,23 +99,33 @@ function updateWikiUrl(subdomain) {
 
 // init 
 async function init() {
+    setStatus("Loading settings...");
+    loadSettings();
+
     setStatus("Loading towers...");
     towers = await getTowerNames();
-    if (!towers.length) {
+    
+    if (!towers || !towers.length) {
         setStatus("Failed to load towers.");
         return;
     }
+
     setStatus("Choosing tower...");
-    await chooseTower();
+    await chooseTower(); 
+    
     setStatus("Tower chosen.");
     towerAcronyms = towers.map(t => getAcronym(t).toLowerCase());
+    
+    // Reset UI
     typ.textContent = "???";
     dif.textContent = "???";
     loc.textContent = "???";
     cre.textContent = "???";
+    
     guessesLeft = guesses;
     revealIndex = 0;
     gameOver = false;
+    
     setRemaining(`Guesses left: ${guessesLeft}`);
     setStatus("");
     inp.focus();
@@ -146,7 +156,8 @@ function submitGuess() {
         guess === tower.name.toLowerCase() ||
         guess === getAcronym(tower.name).toLowerCase()
     ) {
-        setStatus(`Correct! (${guesses - guessesLeft + 1} guesses)`);
+        if (guesses - guessesLeft + 1 > 1) setStatus(`${tower.name} (${getAcronym(tower.name)}) was correct! (${guesses - guessesLeft + 1} guesses)`);
+        else setStatus(`${tower.name} (${getAcronym(tower.name)}) was correct! (${guesses - guessesLeft + 1} guess)`);
         endGame();
         return;
     }
