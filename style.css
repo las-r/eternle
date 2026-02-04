@@ -1,4 +1,4 @@
-/* eternle stylesheet v1.0.1 */
+/* eternle stylesheet v1.0.2 */
 /* by las-r on github */
 
 html {
@@ -81,7 +81,7 @@ input:focus {
 
 button {
     padding: 0.5rem 1rem;
-    background: rgba(34, 34, 34, 0.3); /* slightly transparent */
+    background: rgba(34, 34, 34, 0.3);
     color: #fff;
     border: 1px solid #555;
     border-radius: 5px;
@@ -152,7 +152,6 @@ i {
     color: #aaa;
 }
 
-/* Container for the grid */
 .options-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
