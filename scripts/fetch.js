@@ -1,5 +1,4 @@
-// fetch.js v1.0
-// made by las-r on github
+// fetch.js v1.1
 
 // fetching functions
 async function fetchPageHTML(page) {
@@ -15,7 +14,7 @@ async function fetchPageHTML(page) {
     return json.parse?.text?.["*"] ?? "";
 }
 
-async function fetchCategoryMembers(category) {
+async function fetchCategoryMembers(category, namespace = 0) {
     const pages = [];
     let cmcontinue = "";
     do {
@@ -35,7 +34,10 @@ async function fetchCategoryMembers(category) {
 
         if (data.query && data.query.categorymembers) {
             data.query.categorymembers.forEach(member => {
-                if (member.ns === 0) {
+                if (member.ns === namespace) {
+                    if (member.title.includes("User blog:")) return;
+                    if (member.title.includes("Finale") && ["Realm", "Subrealm", "Realms", "Subrealms"].includes(category)) return;
+                    
                     pages.push(member.title);
                 }
             });
@@ -46,20 +48,43 @@ async function fetchCategoryMembers(category) {
 }
 
 async function getTowerNames() {
-    const categories = ["Towers", "Steeples", "Citadels", "Mini_Towers", "Obelisks", "Tower_Rushes", "Tower", "Steeple", "Citadel", "Mini_Tower", "Obelisk", "Tower_Rush", "ANaGCs", "CTaSs", "DNaCs", "Fake_NEATs", "NBiPs", "NEaNEaTs", "NEATs", "NEAT_Rushes", "OoaOs", "PAPs"];
+    const metaSourceCategories = ["Tower_Type", "Tower_Types", "NEAT_Type", "NEAT_Types"];
+    const uniqueTypes = new Set(["Tower", "Steeple", "Citadel", "Obelisk", "Mini_Tower"]);
+
+    for (const metaCat of metaSourceCategories) {
+        setStatus(`Fetching types from Category:${metaCat}...`);
+        const foundSubCats = await fetchCategoryMembers(metaCat, 14);
+        
+        for (const subCat of foundSubCats) {
+            const cleanName = subCat.replace(/^Category:/, "");
+            uniqueTypes.add(cleanName);
+        }
+    }
+
+    const categoriesToSearch = new Set();
+    for (const type of uniqueTypes) {
+        categoriesToSearch.add(type);
+        categoriesToSearch.add(type + "s");
+        categoriesToSearch.add(type + "es");
+    }
+
+    const categories = [...categoriesToSearch];
+
     const out = new Set();
     for (const cat of categories) {
-        setStatus(`Fetching Category:${cat}...`);
-        const members = await fetchCategoryMembers(cat);
+        setStatus(`Fetching towers from Category:${cat}...`);
+        const members = await fetchCategoryMembers(cat, 0);
 
         for (const name of members) {
             const lower = name.toLowerCase();
             if (lower.includes("category:") || lower.includes("(disambiguation)")) continue;
+            
             if (categories.map(v => typeof v === "string" && v.endsWith("s") ? v.slice(0, -1) : v).includes(name)) continue;
 
             out.add(name);
         }
     }
+    
     const finalArray = [...out];
     setStatus(`Fetched ${finalArray.length} towers.`);
     return finalArray;
@@ -102,17 +127,31 @@ function cleanCreators(container) {
 }
 
 async function getTowerData(name) {
-    const html = await fetchPageHTML(name.replace(" ", "_"));
+    const html = await fetchPageHTML(name.replace(/ /g, "_"));
     const doc = new DOMParser().parseFromString(html, "text/html");
-    const pageText = (doc.body.textContent || "").toLowerCase();;
+    const pageText = (doc.body.textContent || "").toLowerCase();
+
     const isDeconfirmed = pageText.includes("contains deconfirmed content") || pageText.includes("contains removed content") || pageText.includes("contains scrapped content");
     const isMonthly = pageText.includes("part of a monthly challenge");
     const isUnreleased = pageText.includes("contains unreleased content");
     const isEvent = pageText.includes("part of an event");
     const isNotAllowed = (
-        pageText.includes("Summit of Memories") && pageText.includes("(Classic)") && pageText.includes("Previously Located In")
-    )
-    const isCanon = !(isDeconfirmed || isEvent || isMonthly || isNotAllowed || isUnreleased)
+        pageText.includes("summit of memories") && pageText.includes("(classic)") && pageText.includes("previously located in")
+    );
+    const isCanon = !(isDeconfirmed || isEvent || isMonthly || isNotAllowed || isUnreleased || pageText.includes("contains non-canon content"));
+
+    const typeEl = getInfoboxField(doc, "Type") || getInfoboxField(doc, "Tower Type");
+    let detectedType = typeEl ? typeEl.textContent.trim() : null;
+
+    if (!detectedType) {
+        if (name.includes("Steeple of ")) detectedType = "Steeple";
+        else if (name.includes("Citadel of ")) detectedType = "Citadel";
+        else if (name.includes("Obelisk of ")) detectedType = "Obelisk";
+        else if (name.includes("Tower Rush")) detectedType = "Tower Rush";
+        else if (name.startsWith("Tower of ")) detectedType = "Tower";
+        else detectedType = "Mini Tower";
+    }
+
     const data = {
         name,
         isDeconfirmed,
@@ -121,22 +160,20 @@ async function getTowerData(name) {
         isEvent,
         isNotAllowed,
         isCanon,
-        type:
-            name.includes("Steeple of ") ? "Steeple" :
-            name.includes("Citadel of ") ? "Citadel" :
-            name.includes("Obelisk of ") ? "Obelisk" :
-            name.includes(" Tower Rush") ? "Tower Rush" :
-            name.startsWith("Tower of ") ? "Tower" :
-            "Mini Tower",
+        type: detectedType,
         difficulty: "Unknown",
         location: "Unknown",
         creators: "Unknown"
     };
+
     const locEl = getInfoboxField(doc, "Located In");
     if (locEl) data.location = locEl.textContent.replace(/\s+/g, " ").trim();
+
     const diffEl = getInfoboxField(doc, "Difficulty");
     if (diffEl) data.difficulty = diffEl.textContent.trim();
+
     const creatorEl = getInfoboxField(doc, "Creator(s)");
     if (creatorEl) data.creators = cleanCreators(creatorEl);
+
     return data;
 }
