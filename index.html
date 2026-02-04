@@ -2,7 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="description" content="A guessing game about EToH.">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A tower guessing game.">
         <meta name="keywords" content="eternle, etoh, jtoh, eternal towers of hell, jukes towers of hell, roblox">
         <title>Eternle</title>
         <link rel="stylesheet" href="style.css">
@@ -11,7 +12,7 @@
     <body>
         <!-- title -->
         <h1>Eternle</h1>
-        <p class="title">A guessing game about EToH.</p>
+        <p class="title">A tower guessing game.</p>
         <hr>
 
         <!-- info -->
@@ -51,37 +52,60 @@
         <!-- options -->
         <details class="center">
             <summary>Options</summary>
-            <div class="options">
-                <input type="checkbox" id="canon" checked>
-                <label for="canon">Canon</label>
 
-                <input type="checkbox" id="monthly">
-                <label for="monthly">Time-Lost</label>
-
-                <input type="checkbox" id="pom">
-                <label for="pom">Pit of Misery</label>
-
-                <input type="checkbox" id="som">
-                <label for="som">Summit of Memories</label>
-
-                <input type="checkbox" id="event">
-                <label for="event">Event</label>
-
-                <input type="checkbox" id="unreleased">
-                <label for="unreleased">Unreleased</label>
-
-                <input type="checkbox" id="removed">
-                <label for="removed">Removed</label>
+            <div class="options-grid">
+                <div class="option-item">
+                    <input type="checkbox" id="canon" checked>
+                    <label for="canon">Canon</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="monthly">
+                    <label for="monthly">Time-Lost</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="pom">
+                    <label for="pom">Pit of Misery</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="som">
+                    <label for="som">Summit of Memories</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="event">
+                    <label for="event">Event</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="unreleased">
+                    <label for="unreleased">Unreleased</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="removed">
+                    <label for="removed">Removed</label>
+                </div>
+                <p>Disclaimer: These options are made for EToH. They may not work properly on other tower games.</p>
+                <div class="option-item full-width">
+                    <div class="wiki-label">Fandom Subdomain</div>
+                    <div class="wiki-input-wrapper">
+                        <input type="text" id="wiki-input" placeholder="jtoh" value="jtoh">
+                        <span class="wiki-suffix">.fandom.com</span>
+                    </div>
+                </div>
             </div>
         </details>
 
         <!-- footer -->
         <hr>
-        <p class="footer">| <a href="https://github.com/las-r/eternle">Source</a> | v0.3.2 | <a href="changelog.html">Changelog</a> | </p>
+        <p class="footer">| <a href="https://github.com/las-r/eternle">Source</a> | v1.0 | <a href="changelog.html">Changelog</a> | </p>
 
         <!-- script -->
-        <script src="script.js"></script>
+        <script src="scripts/script.js"></script>
+        <script src="scripts/fetch.js"></script>
+        <script src="scripts/tower.js"></script>
+        <script>
+            window.addEventListener('load', function() {
+                loadSettings();
+                init();
+            });
+        </script>
     </body>
 </html>
-
-
