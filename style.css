@@ -1,4 +1,4 @@
-/* eternle stylesheet v0.4.1 */
+/* eternle stylesheet v1.0*/
 /* by las-r on github */
 
 html {
@@ -8,6 +8,7 @@ html {
 body {
     margin: 50px;
     min-height: 100vh;
+    background-attachment: fixed;
     background-color: #000;
     background-image:
         linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
@@ -146,4 +147,123 @@ details {
 
 i {
     color: #aaa;
+}
+
+/* Container for the grid */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    max-width: 600px;
+    margin: 1rem auto;
+    padding: 10px;
+}
+
+.option-item {
+    position: relative;
+}
+
+.option-item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.option-item label {
+    display: block;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    user-select: none;
+    backdrop-filter: blur(3px);
+}
+
+.option-item label:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #666;
+}
+
+.option-item input[type="checkbox"]:checked + label {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.option-item input[type="checkbox"]:focus + label {
+    outline: 1px solid #888;
+}
+
+summary {
+    cursor: pointer;
+    font-size: 14px;
+    color: #aaa;
+    transition: color 0.2s;
+    margin-bottom: 10px;
+}
+
+summary:hover {
+    color: #fff;
+}
+
+.option-item.full-width {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+
+.wiki-label {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-left: 2px;
+}
+
+.wiki-input-wrapper input {
+    flex-grow: 1;
+    border: none !important;
+    background: transparent !important;
+    margin-bottom: 0 !important;
+    border-radius: 4px 0 0 4px;
+    color: #fff;
+    padding: 10px;
+    height: 100%;
+    font-family: inherit;
+    backdrop-filter: none;
+}
+
+.wiki-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(17, 17, 17, 0.5);
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding-right: 12px;
+    backdrop-filter: blur(3px);
+    height: 40px;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.wiki-suffix {
+    color: #666;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+    font-family: monospace;
+    padding-left: 5px;
+    border-left: 1px solid #444;
+}
+
+.wiki-input-wrapper:focus-within {
+    border-color: #aaa;
+    background: rgba(30, 30, 30, 0.6);
 }
