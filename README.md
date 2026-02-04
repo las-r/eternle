@@ -8,8 +8,9 @@ All tower info is pulled from Fandom using the [MediaWiki API](https://www.media
 *Huge thanks to the members and staff of the EToH Wiki and Discord server for being amazing!*
 
 ## Roadmap
-- Global leaderboard
-    - Will need a proper scoring system
+- Global stats
+    - DAU, etc.
+- QOL changes
 - More options
     - Realm selection
     - Difficulty selection
