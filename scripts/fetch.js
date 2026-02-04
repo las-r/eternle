@@ -1,4 +1,5 @@
 // fetch.js v1.0
+// made by las-r on github
 
 // fetching functions
 async function fetchPageHTML(page) {
