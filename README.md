@@ -13,5 +13,3 @@ All info relating to the game is pulled from the [EToH Wiki](https://jtoh.fandom
 - More options
     - Realm selection
     - Difficulty selection
-- More tower games?
-    - TEA, atos, TNP, TBP, etc.
