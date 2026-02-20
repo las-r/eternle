@@ -1,4 +1,4 @@
-<img width="1866" height="920" alt="image" src="https://github.com/user-attachments/assets/efedfea9-388d-4394-9cd7-85299b8f82ce" />
+<img width="1866" height="920" alt="image" src="https://github.com/user-attachments/assets/23ab8605-caa4-4ff5-9e12-b7f7e6d548ce" />
 
 # Eternle
 A simple yet extensively customizable Roblox tower guessing game.
