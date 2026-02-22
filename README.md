@@ -8,6 +8,8 @@ All tower info is pulled from Fandom using the [MediaWiki API](https://www.media
 *Huge thanks to the members and staff of the EToH Wiki and Discord server for being amazing!*
 
 ## Roadmap
+- Roblox account authentication
+    - For leaderboards and whatnot
 - Global stats
     - DAU, etc.
 - QOL changes
