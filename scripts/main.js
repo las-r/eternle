@@ -1,4 +1,4 @@
-// script.js v1.0.1
+// script.js v1.1
 // made by las-r on github
 
 // constants
@@ -9,9 +9,29 @@ const cre = document.getElementById("creators");
 const inp = document.getElementById("guess");
 const revealOrder = ["type", "location", "difficulty", "creators"];
 const guesses = 5;
-let wikiUrl = "https://jtoh.fandom.com/api.php?";
+const bgs = [
+    "aa.png",
+    "atw.png",
+    "goe.png",
+    "lr.png",
+    "r2.webp",
+    "r4.png",
+    "r6.png",
+    "r7.png",
+    "r9.png",
+    "sa.png",
+    "tsa.png",
+    "z1.png",
+    "z5.png",
+    "z7.png",
+    "z8.png",
+    "z9.webp",
+    "z10.png",
+    "z10b.png"
+]
 
 // game state
+let wikiUrl = "https://jtoh.fandom.com/api.php?";
 let towers = [];
 let towerAcronyms = [];
 let guessesLeft = guesses;
@@ -99,6 +119,10 @@ function updateWikiUrl(subdomain) {
 
 // init 
 async function init() {
+    setStatus("Loading background...");
+    let bg = bgs[Math.floor(Math.random() * bgs.length)]
+    document.body.style.setProperty('background', `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(backgrounds/${bg})`);
+
     setStatus("Loading settings...");
     loadSettings();
 
