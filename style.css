@@ -1,4 +1,4 @@
-/* eternle stylesheet v1.0.3 */
+/* eternle stylesheet v1.0.4 */
 /* by las-r on github */
 
 html {
@@ -6,15 +6,13 @@ html {
 }
 
 body {
-    margin: 50px;
+    margin: 0;
+    padding: 50px;
     min-height: 100vh;
     background-attachment: fixed;
-    background-color: #000;
-    background-image:
-        linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-        url("background.webp");
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     color: #fff;
     font-family: monospace;
     line-height: 1.5;
@@ -23,6 +21,10 @@ body {
 
 * {
     box-sizing: border-box;
+}
+
+a {
+    color: #aaf;
 }
 
 h1, h2 {
